@@ -1,7 +1,6 @@
 package tobystudyproject.tobystudyproject.objectanddependency.dao.second;
 
-import org.springframework.stereotype.Component;
-import tobystudyproject.tobystudyproject.objectanddependency.dao.first.User;
+import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

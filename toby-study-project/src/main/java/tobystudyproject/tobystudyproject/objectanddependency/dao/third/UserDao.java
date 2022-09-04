@@ -1,13 +1,21 @@
-package tobystudyproject.tobystudyproject.objectanddependency.dao.first;
+package tobystudyproject.tobystudyproject.objectanddependency.dao.third;
 
 import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDao {
-    public void add(User user) throws ClassNotFoundException, SQLException{
-        Connection c = getConnection();
+    private SimpleConnectionManager simpleConnectionManager;
 
+    public UserDao() {
+        simpleConnectionManager = new SimpleConnectionManager();
+    }
+
+    public void add(User user) throws ClassNotFoundException, SQLException{
+        Connection c = simpleConnectionManager.makeNewConnection();
         PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
         ps.setString(1, user.getId());
         ps.setString(2
@@ -20,7 +28,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = simpleConnectionManager.makeNewConnection();
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
 
@@ -36,10 +44,5 @@ public class UserDao {
         c.close();
 
         return user;
-    }
-
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.Driver");
-        return DriverManager.getConnection("jdbc:h2:tcp://localhost/~/toby", "sa", "");
     }
 }

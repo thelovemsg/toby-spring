@@ -1,4 +1,4 @@
-package tobystudyproject.tobystudyproject.objectanddependency.dao.first;
+package tobystudyproject.tobystudyproject.objectanddependency.dao;
 
 import lombok.Getter;
 import lombok.Setter;

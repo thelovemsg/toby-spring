@@ -1,5 +1,7 @@
 package tobystudyproject.tobystudyproject.objectanddependency.dao.first;
 
+import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
+
 import java.sql.SQLException;
 
 public class Test {
