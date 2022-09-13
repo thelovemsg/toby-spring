@@ -1,4 +1,4 @@
-package tobystudyproject.tobystudyproject.objectanddependency.dao.first;
+package tobystudyproject.testrefactoring.dao.first;
 
 import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
 
@@ -24,19 +24,47 @@ public class UserDao {
         Connection c = getConnection();
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
-
+        User user = null;
         ResultSet rs = ps.executeQuery();
-        rs.next();
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setName(rs.getString("name"));
-        user.setPassword(rs.getString("password"));
+        if(rs.next()){
+            rs.next();
+            user = new User();
+            user.setId(rs.getString("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+        }
 
         rs.close();
         ps.close();
         c.close();
 
+        if(user == null) throw new RuntimeException("no data");
+
         return user;
+    }
+
+    public void deleteAll() throws SQLException, ClassNotFoundException {
+        Connection c = getConnection();
+
+        PreparedStatement ps = c.prepareStatement("delete from users");
+        ps.executeUpdate();
+
+        ps.close();
+        c.close();
+    }
+
+    public int getCount() throws SQLException, ClassNotFoundException {
+        Connection c = getConnection();
+        PreparedStatement ps = c.prepareStatement("select count(*) from users");
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        int count = rs.getInt(1);
+
+        rs.close();
+        ps.close();
+        c.close();
+
+        return count;
     }
 
     private Connection getConnection() throws ClassNotFoundException, SQLException {

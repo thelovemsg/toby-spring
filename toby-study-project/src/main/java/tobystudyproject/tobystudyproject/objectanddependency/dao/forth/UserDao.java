@@ -1,5 +1,6 @@
 package tobystudyproject.tobystudyproject.objectanddependency.dao.forth;
 
+import tobystudyproject.testrefactoring.dao.first.ConnectionMaker;
 import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
 
 import java.sql.Connection;
@@ -11,6 +12,11 @@ public class UserDao {
 //    public UserDao(){
 //        connectionMaker = new DConnectionMaker();
 //    }
+
+    // 수정자 메소드 DI 방식을 이용한 UserDao
+    /*public void setConnectionMaker(ConnectionMaker connectionMaker){
+        this.connectionMaker = connectionMaker;
+    }*/
     public UserDao(ConnectionMaker connectionMaker){
         this.connectionMaker = connectionMaker;
     }
