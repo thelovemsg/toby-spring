@@ -3,7 +3,7 @@ package tobystudyproject.tobystudyproject.caltest;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import tobystudyproject.tobystudyproject.three.cal.Calculator;
+import tobystudyproject.tobystudyproject.section_three.cal.Calculator;
 
 import java.io.IOException;
 

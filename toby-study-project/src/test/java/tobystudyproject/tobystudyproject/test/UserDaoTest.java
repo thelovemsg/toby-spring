@@ -1,16 +1,12 @@
 package tobystudyproject.tobystudyproject.test;
 
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import tobystudyproject.testrefactoring.dao.first.UserDao;
-import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
+import tobystudyproject.tobystudyproject.User;
+import tobystudyproject.tobystudyproject.sectionfive.Level;
 
 import java.sql.SQLException;
 
@@ -33,9 +29,9 @@ public class UserDaoTest {
 //        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
 //        this.dao = context.getBean("userDao", UserDao.class);
         this.dao = new UserDao();
-        this.user1 = new User("msg1", "msg1", "msg1");
-        this.user2 = new User("msg2", "msg2", "msg2");
-        this.user3 = new User("msg3", "msg3", "msg3");
+        this.user1 = new User(Level.BASIC,1, 0, "thelovemsg1", "thelovemsg1", "1234");
+        this.user2 = new User(Level.SILVER, 0, 1,"thelovemsg2", "thelovemsg2", "1234");
+        this.user3 = new User(Level.GOLD, 0, 1,"thelovemsg3", "thelovemsg3", "1234");
     }
 
     @Test
@@ -62,9 +58,9 @@ public class UserDaoTest {
     public void count() throws SQLException, ClassNotFoundException {
         // bean으로 등록하고 하려고 하나 테스트로 만든게 너무 많아서 엮여서 번거롭기에, 그냥 직접 호출해서 테스트 중이다.
         // 물론 실전에서는 bean을 등록하고 사용할 것이다.
-        User user1 = new User("msg1", "테스트1", "test1");
-        User user2 = new User("msg2", "테스트2", "test2");
-        User user3 = new User("msg3", "테스트3", "test3");
+        User user1 = new User(Level.BASIC,0,0,"msg1", "테스트1", "test1");
+        User user2 = new User(Level.BASIC,0,0,"msg2", "테스트2", "test2");
+        User user3 = new User(Level.BASIC,0,0,"msg3", "테스트3", "test3");
 
         dao.deleteAll();
         assertEquals(dao.getCount(), 0);

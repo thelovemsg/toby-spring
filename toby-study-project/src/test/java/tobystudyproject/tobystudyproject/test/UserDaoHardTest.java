@@ -3,7 +3,7 @@ package tobystudyproject.tobystudyproject.test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import tobystudyproject.testrefactoring.dao.first.UserDao;
-import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
+import tobystudyproject.tobystudyproject.User;
 
 import java.sql.SQLException;
 

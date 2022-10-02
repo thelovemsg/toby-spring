@@ -1,6 +1,6 @@
 package tobystudyproject.tobystudyproject.objectanddependency.dao.third;
 
-import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
+import tobystudyproject.tobystudyproject.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

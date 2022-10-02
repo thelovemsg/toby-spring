@@ -1,6 +1,6 @@
 package tobystudyproject.tobystudyproject.objectanddependency.dao.withapplicaitoncontext;
 
-import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
+import tobystudyproject.tobystudyproject.User;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

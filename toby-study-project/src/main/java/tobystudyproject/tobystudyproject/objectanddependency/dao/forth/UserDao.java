@@ -1,7 +1,7 @@
 package tobystudyproject.tobystudyproject.objectanddependency.dao.forth;
 
 import tobystudyproject.testrefactoring.dao.first.ConnectionMaker;
-import tobystudyproject.tobystudyproject.objectanddependency.dao.User;
+import tobystudyproject.tobystudyproject.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
