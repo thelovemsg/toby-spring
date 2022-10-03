@@ -3,6 +3,7 @@ package tobystudyproject.tobystudyproject.before;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import tobystudyproject.tobystudyproject.dao.UserDao;
 
 @Configuration
 public class UserDaoFactory {

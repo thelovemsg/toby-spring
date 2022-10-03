@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import tobystudyproject.tobystudyproject.before.UserDao;
+import tobystudyproject.tobystudyproject.dao.UserDao;
+import tobystudyproject.tobystudyproject.service.UserService;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,7 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(locations="/applicationContext.xml")
 public class UserDaoTest {
 
-    @Autowired ApplicationContext context;
+    @Autowired
+    ApplicationContext context;
+    @Autowired
+    UserService userService;
     private UserDao dao;
     private User user1;
     private User user2;
@@ -28,9 +32,9 @@ public class UserDaoTest {
     @BeforeEach
     public void setUp(){
         this.dao = context.getBean("userDao", UserDao.class);
-        this.user1 = new User("thelovemsg1","thelovemsg1","thelovemsg1");
-        this.user2 = new User("thelovemsg2","thelovemsg2","thelovemsg2");
-        this.user3 = new User("thelovemsg3","thelovemsg3","thelovemsg3");
+        this.user1 = new User("thelovemsg1","thelovemsg1","thelovemsg1", Level.BASIC, 1,0);
+        this.user2 = new User("thelovemsg2","thelovemsg2","thelovemsg2", Level.SILVER, 55,10);
+        this.user3 = new User("thelovemsg3","thelovemsg3","thelovemsg3", Level.GOLD, 100,40);
     }
 
     @Test
@@ -44,12 +48,10 @@ public class UserDaoTest {
 
         System.out.println(user1.getId());
         User userget1 = dao.get(user1.getId());
-        assertThat(userget1.getName()).isEqualTo(user1.getName());
-        assertThat(userget1.getPassword()).isEqualTo(user1.getPassword());
+        checkSameUser(userget1, user1);
 
         User userget2 = dao.get(user2.getId());
-        assertThat(userget2.getName()).isEqualTo(user2.getName());
-        assertThat(userget2.getPassword()).isEqualTo(user2.getPassword());
+        checkSameUser(userget2, user2);
     }
 
     @Test
@@ -88,14 +90,41 @@ public class UserDaoTest {
         checkSameUser(this.user1, users3.get(0));
         checkSameUser(this.user2, users3.get(1));
         checkSameUser(this.user3, users3.get(2));
+    }
 
+    @Test
+    public void update() {
+        dao.deleteAll();
 
+        dao.add(user1);
+        dao.add(user2);
+
+        user1.setName("shame");
+        user1.setPassword("shame");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+        dao.update(user1);
+
+        User user1update = dao.get(user1.getId());
+        checkSameUser(user1,user1update);
+
+        User user2same = dao.get(user2.getId());
+        checkSameUser(user2, user2same);
+    }
+
+    @Test
+    public void bean() {
+        assertThat(this.userService).isNotNull();
     }
 
     private void checkSameUser(User user1, User user) {
         assertThat(user1.getId()).isEqualTo(user.getId());
         assertThat(user1.getName()).isEqualTo(user.getName());
         assertThat(user1.getPassword()).isEqualTo(user.getPassword());
+        assertThat(user1.getLevel()).isEqualTo(user.getLevel());
+        assertThat(user1.getLogin()).isEqualTo(user.getLogin());
+        assertThat(user1.getRecommend()).isEqualTo(user.getRecommend());
     }
 
 

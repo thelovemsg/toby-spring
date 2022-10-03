@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import tobystudyproject.tobystudyproject.before.CountingConnectionMaker;
 import tobystudyproject.tobystudyproject.before.CountingDaoFactory;
-import tobystudyproject.tobystudyproject.before.UserDao;
+import tobystudyproject.tobystudyproject.dao.UserDao;
 
 public class UserDaoConnectionCountingTest {
 

@@ -1,19 +1,16 @@
-package tobystudyproject.tobystudyproject.before;
+package tobystudyproject.tobystudyproject.dao;
 
-import org.h2.result.Row;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import tobystudyproject.tobystudyproject.Level;
 import tobystudyproject.tobystudyproject.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
-public class UserDao {
+public class UserDao implements IUserDao {
 
     public void setDataSource(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -29,22 +26,17 @@ public class UserDao {
                     user.setId(rs.getString("id"));
                     user.setName(rs.getString("name"));
                     user.setPassword(rs.getString("password"));
+                    user.setLevel(Level.valueOf(rs.getInt("level")));
+                    user.setLogin(rs.getInt("login"));
+                    user.setRecommend(rs.getInt("recommend"));
                     return user;
                 }
             };
 
     public void add(User user) {
-        this.jdbcTemplate.update("insert into user (id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
+        this.jdbcTemplate.update("insert into user (id, name, password, level, login, recommend) values(?,?,?,?,?,?)",
+                user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
     }
-
-    /*public void add(User user) throws DuplicateUserIdException{
-        try {
-            this.jdbcTemplate.update("insert into user (id, name, password) values(?,?,?)", user.getId(), user.getName(), user.getPassword());
-        } catch (SQLException e){
-            throw new DuplicateUserIdException(e);
-        }
-    }*/
-
 
     public User get(String id) {
        return this.jdbcTemplate.queryForObject("select * from user where id = ?",
@@ -74,6 +66,14 @@ public class UserDao {
     public List<User> getAll() {
         return this.jdbcTemplate.query("select * from user order by id",
                 userMapper
+        );
+    }
+
+    public void update(User user1) {
+        this.jdbcTemplate.update(
+            "update user set name = ?, password = ?, level = ?, login = ?, "
+            + "recommend = ? where id = ?", user1.getName(), user1.getPassword(), user1.getLevel().intValue(), user1.getLogin(),
+            user1.getRecommend(), user1.getId()
         );
     }
 }
