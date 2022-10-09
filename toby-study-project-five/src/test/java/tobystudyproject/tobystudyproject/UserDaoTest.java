@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tobystudyproject.tobystudyproject.dao.UserDao;
-import tobystudyproject.tobystudyproject.service.UserService;
+import tobystudyproject.tobystudyproject.service.UserServiceImpl;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,7 +23,7 @@ public class UserDaoTest {
     @Autowired
     ApplicationContext context;
     @Autowired
-    UserService userService;
+    UserServiceImpl userServiceImpl;
     private UserDao dao;
     private User user1;
     private User user2;
@@ -32,9 +32,9 @@ public class UserDaoTest {
     @BeforeEach
     public void setUp(){
         this.dao = context.getBean("userDao", UserDao.class);
-        this.user1 = new User("thelovemsg1","thelovemsg1","thelovemsg1", Level.BASIC, 1,0);
-        this.user2 = new User("thelovemsg2","thelovemsg2","thelovemsg2", Level.SILVER, 55,10);
-        this.user3 = new User("thelovemsg3","thelovemsg3","thelovemsg3", Level.GOLD, 100,40);
+        this.user1 = new User("thelovemsg1","thelovemsg1","thelovemsg1", Level.BASIC, 1,0,"thelovemsg1@naver.com");
+        this.user2 = new User("thelovemsg2","thelovemsg2","thelovemsg2", Level.SILVER, 55,10,"thelovemsg2@naver.com");
+        this.user3 = new User("thelovemsg3","thelovemsg3","thelovemsg3", Level.GOLD, 100,40,"thelovemsg3@naver.com");
     }
 
     @Test
@@ -115,7 +115,7 @@ public class UserDaoTest {
 
     @Test
     public void bean() {
-        assertThat(this.userService).isNotNull();
+        assertThat(this.userServiceImpl).isNotNull();
     }
 
     private void checkSameUser(User user1, User user) {

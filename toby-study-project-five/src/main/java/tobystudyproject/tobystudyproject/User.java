@@ -10,6 +10,7 @@ public class User {
     Level level;
     int login;
     int recommend;
+    String email;
     public Level getLevel(){
         return level;
     }
@@ -28,12 +29,13 @@ public class User {
     String name;
     String password;
     @Builder
-    public User(String id, String name, String password, Level level, int recommend, int login) {
+    public User(String id, String name, String password, Level level, int recommend, int login, String email) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.recommend = recommend;
         this.login = login;
         this.level = level;
+        this.email = email;
     }
 }
