@@ -19,14 +19,19 @@ public class UserServiceTx implements UserService{
 
     @Override
     public void add(User user) {
-        userService.add(user);
+        this.userService.add(user);
     }
 
     @Override
     public void upgradeLevels() {
+        //부가기능 수행
         TransactionStatus  status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
+
         try {
+            //위임
             userService.upgradeLevels();
+
+            //부가기능 수행
             this.transactionManager.commit(status);
         } catch(RuntimeException e) {
             this.transactionManager.rollback(status);

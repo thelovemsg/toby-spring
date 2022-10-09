@@ -3,11 +3,21 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="message" class="tobystudyproject.tobystudyproject.beanstudy.MessageFactoryBean">
+        <property name="text" value="Factory Bean" />
+    </bean>
 
-    <bean id="userService" class="tobystudyproject.tobystudyproject.service.UserServiceTx">
+    <bean id="userService" class="tobystudyproject.tobystudyproject.beanstudy.TxProxyFactoryBean">
+        <property name="target" ref="userServiceImpl"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="pattern" ref="upgradeLevels"/>
+        <property name="serviceInterface" ref="tobystudyproject.tobystudyproject.service.UserService"/>
+    </bean>
+
+<!--    <bean id="userService" class="tobystudyproject.tobystudyproject.service.UserServiceTx">
         <property name="transactionManager" ref="transactionManager" />
         <property name="userService" ref="userServiceImpl" />
-    </bean>
+    </bean>-->
 
     <bean id="userServiceImpl" class="tobystudyproject.tobystudyproject.service.UserServiceImpl">
         <property name="userDao" ref="userDao" />

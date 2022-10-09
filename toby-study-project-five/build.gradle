@@ -22,7 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework:spring-context-support'
-	implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
+	implementation 'org.simplejavamail:simple-java-mail:5.0.0'
 	implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
 	implementation 'com.h2database:h2'
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.7.0")
