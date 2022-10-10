@@ -6,8 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.springframework.aop.ClassFilter;
+import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Primary;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,7 +25,10 @@ import tobystudyproject.tobystudyproject.User;
 import tobystudyproject.tobystudyproject.beanstudy.TxProxyFactoryBean;
 import tobystudyproject.tobystudyproject.dao.MockUserDao;
 import tobystudyproject.tobystudyproject.dao.UserDao;
+import tobystudyproject.tobystudyproject.proxy.Hello;
+import tobystudyproject.tobystudyproject.proxy.HelloTarget;
 import tobystudyproject.tobystudyproject.proxy.TransactionHandler;
+import tobystudyproject.tobystudyproject.reflection.ReflectionTest;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Proxy;
@@ -42,7 +51,11 @@ class UserServiceImplTest {
     @Autowired
     UserDao userDao;
     @Autowired
+    @Qualifier("userService")
     UserService userService;
+    @Autowired
+    @Qualifier("testUserService")
+    UserService testUserService;
     @Autowired
     UserServiceImpl userServiceImpl;
     List<User> users;
@@ -147,20 +160,13 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DirtiesContext
     public void upgradeAllOrNothing() throws Exception{
-        TestUserService testUserService = new TestUserService(users.get(3).getId());
-        testUserService.setUserDao(userDao);
-        testUserService.setMailSender(mailSender );
-
-        UserServiceTx txUserService = new UserServiceTx();
-        txUserService.setTransactionManager(transactionManager);
-        txUserService.setUserService(testUserService);
-
         userDao.deleteAll();
         for (User user : users) userDao.add(user);
 
         try {
-            txUserService.upgradeLevels();
+            this.testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch(UserServiceImpl.TestUserService.TestUserServiceException e){
         }
@@ -168,7 +174,7 @@ class UserServiceImplTest {
         checkLevelUpgrade(users.get(1), false);
     }
 
-    @Test
+    /*@Test
     @DirtiesContext
     public void upgradeAllOrNothingDProxy() throws Exception{
         TestUserService testUserService = new TestUserService(users.get(3).getId());
@@ -187,8 +193,44 @@ class UserServiceImplTest {
             fail("TestUserServiceException expected");
         } catch(UserServiceImpl.TestUserService.TestUserServiceException e){
         }
-
         checkLevelUpgrade(users.get(1), false);
+    }*/
+
+    @Test
+    public void classNamePointcutAdvisor() {
+        NameMatchMethodPointcut classMethodPointcut = new NameMatchMethodPointcut() {
+            public ClassFilter getClassFilter() {
+                return clazz -> clazz.getSimpleName().startsWith("HelloT");
+            }
+        };
+
+        classMethodPointcut.setMappedName("sayH*");
+
+        //test
+        checkAdvice(new HelloTarget(), classMethodPointcut, true);
+
+        class HelloWorld extends HelloTarget{}
+        checkAdvice(new HelloWorld(), classMethodPointcut, false);
+
+        class HelloToby extends HelloTarget{}
+        checkAdvice(new HelloToby(), classMethodPointcut, true);
+    }
+
+    private void checkAdvice(Object target, NameMatchMethodPointcut pointcut, boolean adviced) {
+        ProxyFactoryBean pfBean = new ProxyFactoryBean();
+        pfBean.setTarget(target);
+        pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new ReflectionTest.UppercaseAdvice()));
+        Hello proxiedHello = (Hello) pfBean.getObject();
+
+        if(adviced){
+            assertThat(proxiedHello.sayHello("Toby")).isEqualTo("HELLO TOBY");
+            assertThat(proxiedHello.sayHi("Toby")).isEqualTo("HI TOBY");
+            assertThat(proxiedHello.sayThankYou("Toby")).isEqualTo("Thank You Toby");
+        }else {
+            assertThat(proxiedHello.sayHello("Toby")).isEqualTo("Hello Toby");
+            assertThat(proxiedHello.sayHi("Toby")).isEqualTo("Hi Toby");
+            assertThat(proxiedHello.sayThankYou("Toby")).isEqualTo("Thank You Toby");
+        }
     }
 
     private void checkLevelUpgrade(User user, boolean upgraded) {
@@ -203,6 +245,15 @@ class UserServiceImplTest {
     private void checkLevel(User user, Level expectedLevel) {
         User userUpdate = userDao.get(user.getId());
         assertThat(userUpdate.getLevel()).isEqualTo(expectedLevel);
+    }
+
+    static class TestUserServiceImpl extends UserServiceImpl{
+        private String id = "thelovemsg3";
+
+        protected void upgradeLevel(User user) {
+            if(user.getId().equals(this.id)) throw new TestUserService.TestUserServiceException();
+            super.upgradeLevel(user);
+        }
     }
 
 }

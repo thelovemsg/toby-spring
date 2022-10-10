@@ -4,6 +4,9 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultBeanFactoryPointcutAdvisor;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 import tobystudyproject.tobystudyproject.proxy.Hello;
 import tobystudyproject.tobystudyproject.proxy.HelloTarget;
 import tobystudyproject.tobystudyproject.proxy.HelloUppercase;
@@ -67,7 +70,7 @@ public class ReflectionTest {
     }
 
 
-    private class UppercaseAdvice implements MethodInterceptor {
+    public static class UppercaseAdvice implements MethodInterceptor {
         @Nullable
         @Override
         public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
@@ -75,5 +78,25 @@ public class ReflectionTest {
             return ret.toUpperCase();
         }
     }
+
+    @Test
+    public void pointcutAdvisor() {
+        ProxyFactoryBean pfBean = new ProxyFactoryBean();
+        pfBean.setTarget(new HelloTarget());
+
+        NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+        pointcut.setMappedName("sayH*");
+
+        pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+
+        Hello proxiedHello = (Hello) pfBean.getObject();
+
+        assertThat(proxiedHello.sayHello("Toby")).isEqualTo("HELLO TOBY");
+        assertThat(proxiedHello.sayHi("Toby")).isEqualTo("HI TOBY");
+        assertThat(proxiedHello.sayThankYou("Toby")).isEqualTo("THANK YOU TOBY");
+    }
+
+
+
 
 }

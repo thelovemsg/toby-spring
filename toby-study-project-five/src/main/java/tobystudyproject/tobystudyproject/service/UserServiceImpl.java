@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService{
     }
 
     public void upgradeLevels(){
-        List<User> users=  mockUserDao.getAll();
+        List<User> users=  userDao.getAll();
         for(User user : users){
             if(canUpgradeLevel(user))
                 upgradeLevel(user);
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService{
 
     protected void upgradeLevel(User user) {
         user.upgradeLevel();
-        mockUserDao.update(user);
+        userDao.update(user);
         sendUpgradeEmail(user);
     }
 
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService{
             super.upgradeLevel(user);
         }
 
-        public class TestUserServiceException extends RuntimeException {
+        public static class TestUserServiceException extends RuntimeException {
         }
     }
 }
