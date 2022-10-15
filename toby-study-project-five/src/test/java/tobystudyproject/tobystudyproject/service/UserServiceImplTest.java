@@ -19,6 +19,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import tobystudyproject.tobystudyproject.Level;
 import tobystudyproject.tobystudyproject.MockMailSender;
 import tobystudyproject.tobystudyproject.User;
@@ -46,6 +49,9 @@ import static tobystudyproject.tobystudyproject.service.UserServiceImpl.MIN_RECO
 @ExtendWith(SpringExtension.class) // (JUnit5)
 @ContextConfiguration(locations="/applicationContext.xml")
 class UserServiceImplTest {
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
     @Autowired
     ApplicationContext context;
     @Autowired
@@ -64,9 +70,6 @@ class UserServiceImplTest {
 
     @Autowired
     MailSender mailSender;
-
-    @Autowired
-    PlatformTransactionManager transactionManager;
 
     @BeforeEach
     public void setUp(){
@@ -215,6 +218,35 @@ class UserServiceImplTest {
         class HelloToby extends HelloTarget{}
         checkAdvice(new HelloToby(), classMethodPointcut, true);
     }
+
+    @Test
+    public void readOnlyTransactionAttribute() {
+        testUserService.getAll();
+    }
+
+    @Test
+    @Transactional(readOnly = true)
+    public void transactionSync() {
+//        userDao.deleteAll();
+//        Assertions.assertThat(userDao.getCount()).isEqualTo(0);
+//
+//        DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
+//        txDefinition.setReadOnly(true);
+//        TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
+//
+//        try {
+            userService.deleteAll();
+
+            userService.add(users.get(0));
+            userService.add(users.get(1));
+//        }finally {
+//            transactionManager.rollback(txStatus);
+////            transactionManager.commit(txStatus);
+//        }
+
+
+    }
+
 
     private void checkAdvice(Object target, NameMatchMethodPointcut pointcut, boolean adviced) {
         ProxyFactoryBean pfBean = new ProxyFactoryBean();
