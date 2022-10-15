@@ -5,6 +5,7 @@ import tobystudyproject.tobystudyproject.User;
 
 import java.util.List;
 
+<<<<<<< Updated upstream
 @Transactional
 public interface UserService {
     void add(User user);
@@ -16,6 +17,14 @@ public interface UserService {
     void deleteAll();
     void update(User user);
 
+=======
+public interface UserService {
+    void add(User user);
+    User get(String id);
+    List<User> getAll();
+    void deleteAll();
+    void update(User user);
+>>>>>>> Stashed changes
     void upgradeLevels();
 
 }

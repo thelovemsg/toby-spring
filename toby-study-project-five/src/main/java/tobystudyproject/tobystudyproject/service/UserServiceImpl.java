@@ -81,6 +81,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+<<<<<<< Updated upstream
+=======
+    public User get(String id) {
+        return userDao.get(id);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userDao.getAll();
+    }
+
+    @Override
+>>>>>>> Stashed changes
     public void deleteAll() {
         userDao.deleteAll();
     }
