@@ -59,6 +59,7 @@ class UserServiceImplTest {
     @Autowired
     @Qualifier("userService")
     UserService userService;
+
     @Autowired
     @Qualifier("testUserService")
     UserService testUserService;
@@ -177,28 +178,6 @@ class UserServiceImplTest {
         checkLevelUpgrade(users.get(1), false);
     }
 
-    /*@Test
-    @DirtiesContext
-    public void upgradeAllOrNothingDProxy() throws Exception{
-        TestUserService testUserService = new TestUserService(users.get(3).getId());
-        testUserService.setUserDao(userDao);
-        testUserService.setMailSender(mailSender);
-
-        TxProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
-
-        txProxyFactoryBean.setTarget(testUserService);
-        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
-        userDao.deleteAll();
-        for (User user : users) userDao.add(user);
-
-        try {
-            txUserService.upgradeLevels();
-            fail("TestUserServiceException expected");
-        } catch(UserServiceImpl.TestUserService.TestUserServiceException e){
-        }
-        checkLevelUpgrade(users.get(1), false);
-    }*/
-
     @Test
     public void classNamePointcutAdvisor() {
         NameMatchMethodPointcut classMethodPointcut = new NameMatchMethodPointcut() {
@@ -224,6 +203,7 @@ class UserServiceImplTest {
         testUserService.getAll();
     }
 
+<<<<<<< Updated upstream
     @Test
     @Transactional(readOnly = true)
     public void transactionSync() {
@@ -248,6 +228,8 @@ class UserServiceImplTest {
     }
 
 
+=======
+>>>>>>> Stashed changes
     private void checkAdvice(Object target, NameMatchMethodPointcut pointcut, boolean adviced) {
         ProxyFactoryBean pfBean = new ProxyFactoryBean();
         pfBean.setTarget(target);
@@ -285,6 +267,13 @@ class UserServiceImplTest {
         protected void upgradeLevel(User user) {
             if(user.getId().equals(this.id)) throw new TestUserService.TestUserServiceException();
             super.upgradeLevel(user);
+        }
+
+        public List<User> getAll() {
+            for (User user : super.getAll()) {
+                super.update(user);
+            }
+            return null;
         }
     }
 

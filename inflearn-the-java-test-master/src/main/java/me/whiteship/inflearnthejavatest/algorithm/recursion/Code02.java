@@ -115,7 +115,7 @@ public class Code02 {
         if(begin > end)
             return -1;
         else{
-            int middle = (begin+    end)/2;
+            int middle = (begin+end)/2;
             int compResult = target.compareTo(items[middle]);
             if(compResult == 0)
                 return middle;

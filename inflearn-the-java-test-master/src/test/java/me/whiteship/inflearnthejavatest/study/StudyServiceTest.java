@@ -12,6 +12,7 @@ import org.mockito.stubbing.OngoingStubbing;
 
 import javax.swing.text.html.Option;
 import javax.xml.parsers.SAXParser;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,6 +61,34 @@ class StudyServiceTest {
         });
 
         assertEquals(Optional.empty(), memberService.findById(3L));*/
+
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {1,5,1,2,4,5,1,7};
+        int cnt[] = new int[101], pairs = 0;
+        for (int n : nums) {
+            int temp = ++cnt[n];
+            System.out.println("temp = " + temp);
+            pairs += temp % 2 == 0 ? 1 : 0;
+        }
+        int[] result = new int[] { pairs, nums.length - pairs * 2 };
+        for (int i : result) {
+            System.out.println("i = " + i);
+        }
+
+        boolean[] map = new boolean[101];
+        int pair = 0;
+        int diff = 0;
+
+        for (int item : nums) {
+            if (map[item]) {
+                diff--;
+                pair++;
+            } else
+                diff++;
+            map[item] = !map[item];
+        }
 
     }
 
