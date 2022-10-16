@@ -15,3 +15,4 @@ public interface MemberService {
 
     void notify(Member member);
 }
+git s

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/context
+            http://www.springfrmework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <tx:annotation-driven />
+    <context:annotation-config />
+    <bean id="sqlService" class="tobystudyproject.tobystudyproject.sql.BaseSqlService">
+        <property name="sqlReader" ref="sqlReader" />
+        <property name="sqlRegistry" ref="sqlRegistry"/>
+    </bean>
+    <bean id="sqlReader" class="tobystudyproject.tobystudyproject.sql.JaxbXmlSqlReader">
+        <property name="sqlmapFile" value="sqlmap.xml"></property>
+    </bean>
+    <bean id="sqlRegistry" class="tobystudyproject.tobystudyproject.sql.HashMapSqlRegistry">
+    </bean>
+
+    <bean id="sqlService" class="tobystudyproject.tobystudyproject.sql.DefaultSqlService"/>
+
+   <aop:config>
+        <aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
+    </aop:config>
+
+    <tx:advice id="transactionAdvice">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="*" />
+        </tx:attributes>
+    </tx:advice>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
+    <bean id="testUserService" class="tobystudyproject.tobystudyproject.service.UserServiceImplTest$TestUserServiceImpl"
+        parent="userService" primary="true"/>
+
+    <bean id="message" class="tobystudyproject.tobystudyproject.beanstudy.MessageFactoryBean">
+        <property name="text" value="Factory Bean" />
+    </bean>
+
+    <bean id="transactionAdvice" class="tobystudyproject.tobystudyproject.advice.TransactionAdvice">
+        <property name="transactionManager" ref="transactionManager" />
+    </bean>
+
+    <bean id="transactionPointcut" class="tobystudyproject.tobystudyproject.proxy.NameMatchClassMethodPointcut">
+        <property name="mappedClassName" value="*ServiceImpl" /> <!--클래스 이름 패턴-->
+        <property name="mappedName" value="upgrade" /> <!--메소드 이름 패턴-->
+    </bean>
+<!--    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">-->
+<!--        <property name="mappedName" value="upgrade*" />-->
+<!--    </bean>-->
+
+    <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="advice" ref="transactionAdvice" />
+        <property name="pointcut" ref="transactionPointcut" />
+    </bean>
+
+<!--    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="userServiceImpl"/>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvisor</value>
+            </list>
+        </property>
+    </bean>-->
+<!--    <bean id="userService" class="tobystudyproject.tobystudyproject.beanstudy.TxProxyFactoryBean">-->
+<!--        <property name="target" ref="userServiceImpl"/>-->
+<!--        <property name="transactionManager" ref="transactionManager"/>-->
+<!--        <property name="pattern" ref="upgradeLevels"/>-->
+<!--        <property name="serviceInterface" ref="tobystudyproject.tobystudyproject.service.UserService"/>-->
+<!--    </bean>-->
+
+<!--    <bean id="userService" class="tobystudyproject.tobystudyproject.service.UserServiceTx">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="userService" ref="userServiceImpl" />
+    </bean>-->
+
+    <bean id="userService" class="tobystudyproject.tobystudyproject.service.UserServiceImpl">
+        <property name="userDao" ref="userDao" />
+        <property name="mailSender" ref="mailSender" />
+    </bean>
+
+    <bean id="mailSender" class="tobystudyproject.tobystudyproject.service.DummyMailSender">
+        <!--<property name="host" value="mail.server.com" />-->
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="userDao" class="tobystudyproject.tobystudyproject.dao.UserDao">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sqlService" ref="sqlService" />
+    </bean>
+
+    <bean id="sqlService" class="tobystudyproject.tobystudyproject.service.SimpleSqlService">
+        <property name="sqlMap">
+            <map>
+                <entry key="add" value="insert into user(id, name, password, email, level, login, recommend)
+                    values(?,?,?,?,?,?,?)"></entry>
+                <entry key="get" value="select * from user where id = ?"/>
+                <entry key="getAll" value="select * from user order by id"/>
+                <entry key="deleteAll" value="delete from user" />
+                <entry key="getCount" value="select count(*) from user" />
+                <entry key="update" value="update user set name = ?, password, email = ?, level = ?, login = ?,
+                    recommend = ? where id = ?" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource" >
+        <property name="driverClass" value="org.h2.Driver" />
+        <property name="url" value="jdbc:h2:tcp://localhost/~/toby" />
+        <property name="username" value="sa" />
+        <property name="password" value="" />
+    </bean>
+</beans>
