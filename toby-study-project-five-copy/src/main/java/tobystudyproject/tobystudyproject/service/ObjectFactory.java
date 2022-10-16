@@ -8,6 +8,11 @@
 
 package tobystudyproject.tobystudyproject.service;
 
+<<<<<<< HEAD
+=======
+import tobystudyproject.tobystudyproject.sql.Sqlmap;
+
+>>>>>>> sjmoon
 import javax.xml.bind.annotation.XmlRegistry;
 
 
@@ -40,8 +45,13 @@ public class ObjectFactory {
      * Create an instance of {@link Sqlmap }
      * 
      */
+<<<<<<< HEAD
     public main.java.tobystudyproject.tobystudyproject.service.Sqlmap createSqlmap() {
         return new main.java.tobystudyproject.tobystudyproject.service.Sqlmap();
+=======
+    public Sqlmap createSqlmap() {
+        return new Sqlmap();
+>>>>>>> sjmoon
     }
 
     /**

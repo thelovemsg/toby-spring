@@ -1,10 +1,18 @@
 package tobystudyproject.tobystudyproject.service;
 
 import tobystudyproject.tobystudyproject.customexception.SqlRetrievalFailureException;
+<<<<<<< HEAD
 
 import java.util.Map;
 
 public class SimpleSqlService implements SqlService{
+=======
+import tobystudyproject.tobystudyproject.sql.SqlService;
+
+import java.util.Map;
+
+public class SimpleSqlService implements SqlService {
+>>>>>>> sjmoon
 
     private Map<String, String> sqlMap;
 

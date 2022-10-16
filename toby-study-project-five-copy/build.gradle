@@ -26,9 +26,17 @@ dependencies {
 	implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
 	implementation 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+<<<<<<< HEAD
 	implementation 'javax.xml.bind:jaxb-api:2.3.0'
 	implementation 'javax.activation:activation:1.1'
 	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.0'
+=======
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	implementation 'javax.activation:activation:1.1'
+	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+	implementation 'org.springframework:spring-oxm:5.3.23'
+	implementation 'org.codehaus.castor:castor-xml:1.4.1'
+>>>>>>> sjmoon
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.7.0")
 	testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
