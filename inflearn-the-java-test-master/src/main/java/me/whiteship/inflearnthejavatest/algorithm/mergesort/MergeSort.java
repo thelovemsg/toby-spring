@@ -1,14 +1,21 @@
 package me.whiteship.inflearnthejavatest.algorithm.mergesort;
 
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.stream.IntStream;
 
 public class MergeSort {
     public static void main(String[] args) {
 
-        String[] strs = {"flower","flow","flight"};
+/*        String[] strs = {"flower","flow","flight"};
 
-        Arrays.sort(strs, Comparator.comparingInt(String::length));
+        Arrays.sort(strs, Comparator.comparingInt(String::length));*/
+        int[] nums = {1,5,3,2,2,7,6,4,8,9};
+        Arrays.sort(nums); // 1,2,2,3,4,5,6,7,8,9
+        int[] compare = new int[nums.length];
+        IntStream.range(0,nums.length).forEach(s -> compare[s] = s+1);
+        for (int i : compare) {
+            System.out.println("i = " + i);
+        }
 
     }
     private static void mergeSort(int[] arr){
